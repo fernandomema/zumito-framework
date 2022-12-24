@@ -9,4 +9,5 @@ import { Translation } from './types/Translation.js';
 import { TranslationManager } from './TranslationManager.js';
 import { ZumitoFramework } from './ZumitoFramework.js';
 import { EmojiFallback } from './utils/EmojiFallback.js';
-export { ZumitoFramework, Command, Module, CommandArguments, FrameworkEvent, Translation, TranslationManager, ApiResponse, CommandType, TextFormatter, EmojiFallback };
+import { FrameworkRouter } from './types/FrameworkRouter.js';
+export { ZumitoFramework, Command, Module, CommandArguments, Translation, TranslationManager, ApiResponse, CommandType, FrameworkRouter, FrameworkEvent, TextFormatter, EmojiFallback };

@@ -7,6 +7,7 @@ import { ApiResponse } from './definitions/ApiResponse.js';
 import { FrameworkEvent } from "./types/FrameworkEvent.js";
 import { baseModule } from "./baseModule/index.js";
 import { TranslationManager } from "./TranslationManager.js";
+import { Request, Response } from 'express';
 
 import express from 'express';
 import * as fs from 'fs';
@@ -43,8 +44,8 @@ export class ZumitoFramework {
     commands: Map<string, Command>;
     events: Map<string, FrameworkEvent>;
     translations: TranslationManager;
-    routes: any;
     models: any;
+    routes: Map<string, (req: Request, res: Response) => void>;
     database: any;
     app: any;
     
@@ -70,6 +71,7 @@ export class ZumitoFramework {
         this.events = new Map();
         this.translations = new TranslationManager();
         this.models = new Map();
+        this.routes = new Map();
 
         if (settings.logLevel) {
             console.logLevel = settings.logLevel;
@@ -94,10 +96,11 @@ export class ZumitoFramework {
         }
         
         this.initializeDiscordClient();
-        this.startApiServer();
-
+        
         await this.registerModules();
         await this.refreshSlashCommands();
+        
+        this.startApiServer();
     }
 
     startApiServer() {
@@ -126,6 +129,9 @@ export class ZumitoFramework {
         //Route Prefixes
         //this.app.use("/", indexRouter);
         //this.app.use("/api/", apiRouter);
+        this.routes.forEach((router, path) => {
+            this.app.use(path, router);
+        });
 
         // throw 404 if URL not found
         this.app.all("*", function(req, res) {
@@ -203,13 +209,8 @@ export class ZumitoFramework {
             }
         });
 
-        /*
-
         // Register module routes
         this.routes = new Map([...this.routes, ...moduleInstance.getRoutes()]);
-
-        */
-
 
     }
 

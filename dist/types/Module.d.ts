@@ -1,12 +1,14 @@
 import { ZumitoFramework } from "../ZumitoFramework.js";
 import { Command } from "./Command.js";
 import { FrameworkEvent } from "./FrameworkEvent.js";
+import { Request, Response } from 'express';
 export declare abstract class Module {
     protected path: string;
     protected framework: ZumitoFramework;
     protected commands: Map<string, Command>;
     protected events: Map<string, FrameworkEvent>;
     protected models: Map<string, any>;
+    protected routes: Map<string, (req: Request, res: Response) => void>;
     constructor(path: any, framework: any);
     initialize(): Promise<void>;
     registerCommands(): Promise<void>;
@@ -23,4 +25,6 @@ export declare abstract class Module {
     parseTranslation(path: string, lang: string, json: any): any;
     registerModels(): Promise<void>;
     getModels(): Map<string, any>;
+    registerRoutes(subpath?: string): Promise<void>;
+    getRoutes(): Map<string, (req: Request, res: Response) => void>;
 }

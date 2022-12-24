@@ -34,8 +34,8 @@ export class ZumitoFramework {
     commands;
     events;
     translations;
-    routes;
     models;
+    routes;
     database;
     app;
     /**
@@ -59,6 +59,7 @@ export class ZumitoFramework {
         this.events = new Map();
         this.translations = new TranslationManager();
         this.models = new Map();
+        this.routes = new Map();
         if (settings.logLevel) {
             console.logLevel = settings.logLevel;
         }
@@ -82,9 +83,9 @@ export class ZumitoFramework {
             console.log('[🗄️🟢] Database connection successful');
         }
         this.initializeDiscordClient();
-        this.startApiServer();
         await this.registerModules();
         await this.refreshSlashCommands();
+        this.startApiServer();
     }
     startApiServer() {
         this.app = express();
@@ -107,6 +108,10 @@ export class ZumitoFramework {
         //Route Prefixes
         //this.app.use("/", indexRouter);
         //this.app.use("/api/", apiRouter);
+        this.routes.forEach((router, path) => {
+            console.log(path, router);
+            this.app.use(path, router);
+        });
         // throw 404 if URL not found
         this.app.all("*", function (req, res) {
             return ApiResponse.notFoundResponse(res, "Page not found");
@@ -182,12 +187,12 @@ export class ZumitoFramework {
                 this.models.set(modelName, MergeRecursive(this.models.get(modelName), modelDefinition));
             }
         });
-        /*
-
         // Register module routes
         this.routes = new Map([...this.routes, ...moduleInstance.getRoutes()]);
-
-        */
+        // log registered routes
+        this.routes.forEach((router, path) => {
+            console.log(`[🌐🟢] Registered route ${path}`);
+        });
     }
     initializeDiscordClient() {
         this.client = new Client({

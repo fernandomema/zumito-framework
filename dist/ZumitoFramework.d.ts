@@ -4,6 +4,7 @@ import { FrameworkSettings } from "./types/FrameworkSettings.js";
 import { Module } from "./types/Module.js";
 import { FrameworkEvent } from "./types/FrameworkEvent.js";
 import { TranslationManager } from "./TranslationManager.js";
+import { Request, Response } from 'express';
 /**
  * @class ZumitoFramework
  * @classdesc The main class of the framework.
@@ -20,8 +21,8 @@ export declare class ZumitoFramework {
     commands: Map<string, Command>;
     events: Map<string, FrameworkEvent>;
     translations: TranslationManager;
-    routes: any;
     models: any;
+    routes: Map<string, (req: Request, res: Response) => void>;
     database: any;
     app: any;
     /**
