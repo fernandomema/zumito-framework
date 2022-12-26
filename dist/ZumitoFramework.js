@@ -141,11 +141,11 @@ export class ZumitoFramework {
     async registerModule(modulesFolder, moduleName, module) {
         if (!module) {
             if (fs.existsSync(path.join(modulesFolder, moduleName, 'index.js'))) {
-                module = await import(path.join(modulesFolder, moduleName, 'index.js'));
+                module = await import('file://' + path.join(modulesFolder, moduleName, 'index.js'));
                 module = Object.values(module)[0];
             }
             else if (fs.existsSync(path.join(modulesFolder, moduleName, 'index.ts'))) {
-                module = await import(path.join(modulesFolder, moduleName, 'index.ts'));
+                module = await import('file://' + path.join(modulesFolder, moduleName, 'index.ts'));
                 module = Object.values(module)[0];
             }
             else {
